@@ -897,6 +897,54 @@ export default function App() {
           </form>
         </Modal>
       )}
+      {modal === "booking" && (
+        <Modal
+          title={
+            bookingIntent?.resourceType === "venue"
+              ? "Request this venue"
+              : "Request this service"
+          }
+          onClose={() => {
+            setModal("");
+            setError("");
+            setBookingIntent(null);
+          }}
+          error={error}
+        >
+          <form className="form-stack" onSubmit={submitBooking}>
+            <p className="modal-sub">
+              {bookingIntent?.title} · {inr(bookingIntent?.price || 0)}
+            </p>
+            <label>
+              Wedding event
+              <select
+                name="eventId"
+                value={selected || ""}
+                onChange={(e) => setSelected(Number(e.target.value))}
+                required
+              >
+                {events.map((ev) => (
+                  <option value={ev.id} key={ev.id}>
+                    {ev.name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Field label="Requested date" name="date" type="date" required />
+            <label>
+              Anything we should know?
+              <textarea name="details" rows={3} maxLength={1000} />
+            </label>
+            <button className="button button-dark full" disabled={busy}>
+              {busy ? "Sending request…" : "Send booking request"}
+            </button>
+            <p className="availability-note">
+              Your request will be reviewed by the venue. It is not confirmed
+              until the administrator approves it.
+            </p>
+          </form>
+        </Modal>
+      )}
     </div>
   );
 }
